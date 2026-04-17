@@ -1,0 +1,211 @@
+listen: ":8402"
+
+proxy:
+  target: "http://localhost:8080"
+
+facilitator: "https://pay-skill.com/x402"
+
+payTo: "0x57c1C49271B55ae0c26c6b8Ce29C144f9F178F24"
+
+routes:
+  - path: "/search"
+    price: "0.01"
+    settlement: "tab"
+    description: "Web search — ranked results with title, URL, snippet, date, domain"
+    info:
+      input:
+        type: "http"
+        method: "GET"
+        queryParams:
+          q:
+            type: "string"
+            description: "Search query"
+            example: "best JavaScript frameworks 2026"
+          region:
+            type: "string"
+            description: "Region code (e.g. us, gb, jp)"
+            example: "us"
+          lang:
+            type: "string"
+            description: "Language code (e.g. en, fr)"
+            example: "en"
+          daterange:
+            type: "string"
+            description: "Date filter: qdr:d (day), qdr:w (week), qdr:m (month)"
+            example: "qdr:w"
+          offset:
+            type: "integer"
+            description: "Pagination offset"
+            example: 0
+      output:
+        type: "json"
+        example:
+          query: "best JavaScript frameworks 2026"
+          total_results: "412000000"
+          offset: 0
+          next_offset: 10
+          results:
+            - rank: 1
+              title: "Top JavaScript Frameworks in 2026"
+              url: "https://example.com/js-frameworks-2026"
+              snippet: "React, Vue, and Svelte continue to dominate in 2026..."
+              published_date: "Apr 10, 2026"
+              source_domain: "example.com"
+
+  - path: "/images"
+    price: "0.01"
+    settlement: "tab"
+    description: "Image search — ranked image results with thumbnail, dimensions, source"
+    info:
+      input:
+        type: "http"
+        method: "GET"
+        queryParams:
+          q:
+            type: "string"
+            description: "Image search query"
+            example: "golden gate bridge sunset"
+          region:
+            type: "string"
+            description: "Region code"
+            example: "us"
+          offset:
+            type: "integer"
+            description: "Pagination offset"
+            example: 0
+      output:
+        type: "json"
+        example:
+          query: "golden gate bridge sunset"
+          offset: 0
+          next_offset: 10
+          results:
+            - rank: 1
+              title: "Golden Gate Bridge at sunset"
+              thumbnail_url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:abc123"
+              full_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/golden-gate.jpg"
+              width: 1280
+              height: 720
+              source_page_url: "https://en.wikipedia.org/wiki/Golden_Gate_Bridge"
+              alt_text: "Golden Gate Bridge at sunset"
+
+  - path: "/videos"
+    price: "0.01"
+    settlement: "tab"
+    description: "Video search — ranked results with title, URL, thumbnail, duration, platform"
+    info:
+      input:
+        type: "http"
+        method: "GET"
+        queryParams:
+          q:
+            type: "string"
+            description: "Video search query"
+            example: "how to make sourdough bread"
+          region:
+            type: "string"
+            description: "Region code"
+            example: "us"
+      output:
+        type: "json"
+        example:
+          query: "how to make sourdough bread"
+          results:
+            - rank: 1
+              title: "The Perfect Sourdough Bread Recipe"
+              url: "https://www.youtube.com/watch?v=abc123"
+              thumbnail: "https://i.ytimg.com/vi/abc123/hqdefault.jpg"
+              duration_seconds: 845
+              platform: "youtube"
+              published_date: "Mar 15, 2026"
+
+  - path: "/news"
+    price: "0.01"
+    settlement: "tab"
+    description: "News search — recent ranked news with title, snippet, source, published date"
+    info:
+      input:
+        type: "http"
+        method: "GET"
+        queryParams:
+          q:
+            type: "string"
+            description: "News search query"
+            example: "AI regulation 2026"
+          lang:
+            type: "string"
+            description: "Language code"
+            example: "en"
+          daterange:
+            type: "string"
+            description: "Date filter: qdr:d (day), qdr:w (week)"
+            example: "qdr:d"
+          region:
+            type: "string"
+            description: "Region code"
+            example: "us"
+      output:
+        type: "json"
+        example:
+          query: "AI regulation 2026"
+          results:
+            - rank: 1
+              title: "EU AI Act enters enforcement phase"
+              url: "https://techcrunch.com/2026/04/10/eu-ai-act-enforcement"
+              snippet: "The EU AI Act's enforcement phase began this month, requiring..."
+              source: "TechCrunch"
+              published_at: "Apr 10, 2026"
+              language: "en"
+
+  - path: "/site-search"
+    price: "0.01"
+    settlement: "tab"
+    description: "Site-restricted search — search within a specific domain only"
+    info:
+      input:
+        type: "http"
+        method: "GET"
+        queryParams:
+          q:
+            type: "string"
+            description: "Search query"
+            example: "python async tutorial"
+          domain:
+            type: "string"
+            description: "Domain to restrict search to"
+            example: "docs.python.org"
+          offset:
+            type: "integer"
+            description: "Pagination offset"
+            example: 0
+      output:
+        type: "json"
+        example:
+          query: "python async tutorial"
+          domain: "docs.python.org"
+          offset: 0
+          next_offset: 10
+          results:
+            - rank: 1
+              title: "Coroutines and Tasks — Python 3.12 docs"
+              url: "https://docs.python.org/3/library/asyncio-task.html"
+              snippet: "Coroutines declared with the async/await syntax are the preferred way..."
+              published_date: null
+              source_domain: "docs.python.org"
+
+discovery:
+  discoverable: true
+  base_url: "https://x402-search.up.railway.app"
+  name: "x402 Web Search API"
+  description: "Paid web search API for AI agents. Text, image, video, news, and site-restricted search powered by Google via Serper. Real ranked results, pagination, filters."
+  keywords:
+    - "search"
+    - "web search"
+    - "google"
+    - "news"
+    - "images"
+    - "videos"
+    - "site search"
+    - "serper"
+    - "x402"
+  category: "search"
