@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const { paymentMiddleware } = require("x402-express");
-const { facilitator } = require("@coinbase/x402");
 
 const app = express();
 app.use(express.json());
@@ -11,20 +10,18 @@ app.set("trust proxy", 1);
 const SERPER_KEY = process.env.SERPER_API_KEY;
 const PORT = process.env.PORT || 8080;
 const PAY_TO = "0x57c1C49271B55ae0c26c6b8Ce29C144f9F178F24";
-const FACILITATOR = "https://pay-skill.com/x402";
 
-// x402 payment middleware
 app.use(
   paymentMiddleware(
     PAY_TO,
     {
-      "/search":      { price: "$0.01", network: "base", settlement: "direct" },
-      "/images":      { price: "$0.01", network: "base", settlement: "direct" },
-      "/videos":      { price: "$0.01", network: "base", settlement: "direct" },
-      "/news":        { price: "$0.01", network: "base", settlement: "direct" },
-      "/site-search": { price: "$0.01", network: "base", settlement: "direct" },
+      "/search":      { price: "$0.01", network: "base" },
+      "/images":      { price: "$0.01", network: "base" },
+      "/videos":      { price: "$0.01", network: "base" },
+      "/news":        { price: "$0.01", network: "base" },
+      "/site-search": { price: "$0.01", network: "base" },
     },
-    facilitator
+    { url: "https://facilitator.xpay.sh" }
   )
 );
 
@@ -47,7 +44,6 @@ function parseOffset(req) {
   return parseInt(req.query.offset || "0", 10);
 }
 
-// 1. Web search
 app.get("/search", async (req, res) => {
   const { q, region, lang, daterange } = req.query;
   if (!q) return res.status(400).json({ error: "q is required" });
@@ -56,18 +52,13 @@ app.get("/search", async (req, res) => {
   try {
     const data = await serperRequest("search", payload);
     const results = (data.organic || []).map((r, i) => ({
-      rank: parseOffset(req) + i + 1,
-      title: r.title,
-      url: r.link,
-      snippet: r.snippet,
-      published_date: r.date || null,
-      source_domain: new URL(r.link).hostname,
+      rank: parseOffset(req) + i + 1, title: r.title, url: r.link, snippet: r.snippet,
+      published_date: r.date || null, source_domain: new URL(r.link).hostname,
     }));
     res.json({ query: q, total_results: data.searchInformation?.totalResults || null, offset: parseOffset(req), next_offset: parseOffset(req) + results.length, results });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// 2. Image search
 app.get("/images", async (req, res) => {
   const { q, region, lang } = req.query;
   if (!q) return res.status(400).json({ error: "q is required" });
@@ -83,7 +74,6 @@ app.get("/images", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// 3. Video search
 app.get("/videos", async (req, res) => {
   const { q, region, lang } = req.query;
   if (!q) return res.status(400).json({ error: "q is required" });
@@ -100,7 +90,6 @@ app.get("/videos", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// 4. News search
 app.get("/news", async (req, res) => {
   const { q, lang, daterange, region } = req.query;
   if (!q) return res.status(400).json({ error: "q is required" });
@@ -116,7 +105,6 @@ app.get("/news", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// 5. Site-restricted search
 app.get("/site-search", async (req, res) => {
   const { q, domain, region, lang } = req.query;
   if (!q) return res.status(400).json({ error: "q is required" });
@@ -132,7 +120,6 @@ app.get("/site-search", async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
-// health (unpaid)
 app.get("/health", (req, res) => res.json({ status: "ok" }));
 
-app.listen(PORT, () => console.log(`x402-search running on :${PORT} — payTo: ${PAY_TO}`));
+app.listen(PORT, () => console.log(`x402-search running on :${PORT}`));
