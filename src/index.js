@@ -22,8 +22,7 @@ app.use(
       "/videos":      { price: "$0.01", network: "base", settlement: "direct" },
       "/news":        { price: "$0.01", network: "base", settlement: "direct" },
       "/site-search": { price: "$0.01", network: "base", settlement: "direct" },
-    },
-    FACILITATOR
+    }
   )
 );
 
