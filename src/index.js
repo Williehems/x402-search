@@ -17,11 +17,11 @@ app.use(
   paymentMiddleware(
     PAY_TO,
     {
-   "/search":      { price: "$0.01", network: "base", settlement: "direct" },
-"/images":      { price: "$0.01", network: "base", settlement: "direct" },
-"/videos":      { price: "$0.01", network: "base", settlement: "direct" },
-"/news":        { price: "$0.01", network: "base", settlement: "direct" },
-"/site-search": { price: "$0.01", network: "base", settlement: "direct" 
+      "/search":      { price: "$0.01", network: "base", settlement: "direct" },
+      "/images":      { price: "$0.01", network: "base", settlement: "direct" },
+      "/videos":      { price: "$0.01", network: "base", settlement: "direct" },
+      "/news":        { price: "$0.01", network: "base", settlement: "direct" },
+      "/site-search": { price: "$0.01", network: "base", settlement: "direct" },
     },
     FACILITATOR
   )
