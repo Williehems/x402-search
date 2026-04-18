@@ -5,6 +5,7 @@ const { paymentMiddleware } = require("x402-express");
 
 const app = express();
 app.use(express.json());
+app.set("trust proxy", 1);
 
 const SERPER_KEY = process.env.SERPER_API_KEY;
 const PORT = process.env.PORT || 8080;
