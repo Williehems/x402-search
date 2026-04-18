@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const { paymentMiddleware } = require("x402-express");
+const { facilitator } = require("@coinbase/x402");
 
 const app = express();
 app.use(express.json());
@@ -22,7 +23,8 @@ app.use(
       "/videos":      { price: "$0.01", network: "base", settlement: "direct" },
       "/news":        { price: "$0.01", network: "base", settlement: "direct" },
       "/site-search": { price: "$0.01", network: "base", settlement: "direct" },
-    }
+    },
+    facilitator
   )
 );
 
